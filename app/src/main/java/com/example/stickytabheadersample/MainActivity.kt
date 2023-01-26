@@ -10,14 +10,15 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.stickytabheadersample.ui.theme.StickyTabHeaderSampleTheme
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,24 +29,35 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun SampleScreen() {
-    var tabSelected by rememberSaveable { mutableStateOf(Screen.A) }
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
     Column {
         TabRow(
-            selectedTabIndex = tabSelected.ordinal
+            selectedTabIndex = pagerState.currentPage
         ) {
             Screen.values().map { it.name }.forEachIndexed { index, title ->
                 Tab(
                     text = { Text(text = title) },
-                    selected = tabSelected.ordinal == index,
-                    onClick = { tabSelected = Screen.values()[index] }
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
+                    }
                 )
             }
         }
-        when (tabSelected) {
-            Screen.A -> AScreen()
-            Screen.B -> BScreen()
+        HorizontalPager(
+            count = Screen.values().count(),
+            state = pagerState
+        ) { page ->
+            when (Screen.values()[page]) {
+                Screen.A -> AScreen()
+                Screen.B -> BScreen()
+            }
         }
     }
 }
