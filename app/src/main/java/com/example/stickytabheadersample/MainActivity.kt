@@ -1,6 +1,7 @@
 package com.example.stickytabheadersample
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -76,6 +77,7 @@ fun DefaultPreview() {
 
 @Composable
 fun AScreen() {
+    Log.d("Screen A", "composed!")
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -88,6 +90,7 @@ fun AScreen() {
 
 @Composable
 fun BScreen() {
+    Log.d("Screen B", "composed!")
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
