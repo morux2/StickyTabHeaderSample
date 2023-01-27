@@ -8,10 +8,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,8 +36,11 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SampleScreen() {
+    val lazyListState = rememberLazyListState()
     var tabSelected by rememberSaveable { mutableStateOf(Screen.A) }
-    LazyColumn {
+    LazyColumn(
+        state = lazyListState
+    ) {
         item {
             Text(
                 modifier = Modifier.padding(vertical = 100.dp).fillMaxWidth(),
@@ -60,6 +65,10 @@ fun SampleScreen() {
             Screen.A -> aScreen(this@LazyColumn)
             Screen.B -> bScreen(this@LazyColumn)
         }
+    }
+    LaunchedEffect(tabSelected) {
+        if (lazyListState.firstVisibleItemIndex > 1)
+            lazyListState.scrollToItem(1)
     }
 }
 
