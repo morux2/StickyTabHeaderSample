@@ -43,7 +43,9 @@ fun SampleScreen() {
     ) {
         item {
             Text(
-                modifier = Modifier.padding(vertical = 100.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(vertical = 100.dp)
+                    .fillMaxWidth(),
                 textAlign = TextAlign.Center,
                 text = "collapsed!"
             )
