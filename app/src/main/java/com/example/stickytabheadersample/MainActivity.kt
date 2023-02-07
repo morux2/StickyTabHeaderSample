@@ -50,7 +50,7 @@ fun SampleScreen() {
                 text = "collapsed!"
             )
         }
-        stickyHeader {
+        stickyHeader(key = "stickyHeader") {
             TabRow(
                 selectedTabIndex = tabSelected.ordinal
             ) {
@@ -69,8 +69,12 @@ fun SampleScreen() {
         }
     }
     LaunchedEffect(tabSelected) {
-        if (lazyListState.firstVisibleItemIndex > 1)
-            lazyListState.scrollToItem(1)
+        val stickyHeaderIndex =
+            lazyListState.layoutInfo.visibleItemsInfo.firstOrNull { it.key == "stickyHeader" }?.index
+                ?: return@LaunchedEffect
+        if (lazyListState.firstVisibleItemIndex > stickyHeaderIndex) {
+            lazyListState.scrollToItem(stickyHeaderIndex)
+        }
     }
 }
 
