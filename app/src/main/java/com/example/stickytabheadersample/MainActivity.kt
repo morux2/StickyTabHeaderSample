@@ -94,7 +94,7 @@ fun AScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(10) {
-            Text("A ${it}")
+            Text("A $it")
         }
     }
 }
@@ -107,7 +107,7 @@ fun BScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(10) {
-            Text("B ${it}")
+            Text("B $it")
         }
     }
 }
