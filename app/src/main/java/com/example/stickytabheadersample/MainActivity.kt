@@ -2,6 +2,7 @@ package com.example.stickytabheadersample
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -11,9 +12,12 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.stickytabheadersample.ui.theme.StickyTabHeaderSampleTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -35,6 +39,7 @@ class MainActivity : ComponentActivity() {
 fun SampleScreen() {
     val pagerState = rememberPagerState()
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     Column {
         TabRow(
             selectedTabIndex = pagerState.currentPage
@@ -59,6 +64,12 @@ fun SampleScreen() {
                 Screen.A -> AScreen()
                 Screen.B -> BScreen()
             }
+        }
+    }
+    LaunchedEffect(pagerState) {
+        // Collect from the pager state a snapshotFlow reading the currentPage
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            Toast.makeText(context, page.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 }
